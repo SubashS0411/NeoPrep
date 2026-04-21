@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -42,8 +44,24 @@ public class WebConfig implements WebMvcConfigurer {
 
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-            log.info("{} {}", request.getMethod(), request.getRequestURI());
+            String correlationId = request.getHeader("X-Correlation-ID");
+            if (correlationId == null || correlationId.isBlank()) {
+                correlationId = UUID.randomUUID().toString();
+            }
+            MDC.put("correlationId", correlationId);
+            response.setHeader("X-Correlation-ID", correlationId);
+            log.info("event=request_start method={} path={} correlationId={}", request.getMethod(), request.getRequestURI(), correlationId);
             return true;
+        }
+
+        @Override
+        public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+            log.info("event=request_end method={} path={} status={} correlationId={}",
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    response.getStatus(),
+                    MDC.get("correlationId"));
+            MDC.remove("correlationId");
         }
     }
 }

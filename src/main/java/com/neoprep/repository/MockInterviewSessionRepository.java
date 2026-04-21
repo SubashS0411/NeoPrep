@@ -1,0 +1,10 @@
+package com.neoprep.repository;
+
+import com.neoprep.domain.MockInterviewSession;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface MockInterviewSessionRepository extends JpaRepository<MockInterviewSession, Long> {
+    List<MockInterviewSession> findTop10ByUserIdOrderByCreatedAtDesc(Long userId);
+}

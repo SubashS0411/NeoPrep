@@ -24,6 +24,9 @@ public class SecurityConfig {
     @Value("${neoprep.security.api-key:local-dev-key}")
     private String apiKey;
 
+    @Value("${neoprep.security.scoped-role:advanced-agent}")
+    private String scopedRole;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
@@ -31,7 +34,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().permitAll())
-                .addFilterBefore(new ApiKeyFilter(apiKey), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new ApiKeyFilter(apiKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new ScopedRoleFilter(scopedRole), ApiKeyFilter.class);
         return http.build();
     }
 
@@ -55,6 +59,31 @@ public class SecurityConfig {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Missing or invalid X-API-KEY");
                 return;
+            }
+
+            filterChain.doFilter(request, response);
+        }
+    }
+
+    private static class ScopedRoleFilter extends OncePerRequestFilter {
+
+        private final String scopedRole;
+
+        private ScopedRoleFilter(String scopedRole) {
+            this.scopedRole = scopedRole;
+        }
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            String uri = request.getRequestURI();
+            boolean sensitive = uri.startsWith("/api/advanced/outreach") || uri.startsWith("/api/advanced/interviews");
+            if (sensitive) {
+                String providedRole = request.getHeader("X-ROLE");
+                if (providedRole == null || !providedRole.equalsIgnoreCase(scopedRole)) {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write("Missing or invalid X-ROLE for sensitive endpoint");
+                    return;
+                }
             }
 
             filterChain.doFilter(request, response);

@@ -1,6 +1,7 @@
 package com.neoprep.controller;
 
 import com.neoprep.dto.CodeEvaluationResponseDto;
+import com.neoprep.dto.CodeOptimizeResponseDto;
 import com.neoprep.service.CodeEvaluationService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,5 +24,14 @@ public class EvaluationController {
                                               @RequestPart(required = false) MultipartFile image) throws Exception {
         byte[] imageBytes = image != null ? image.getBytes() : null;
         return codeEvaluationService.evaluate(userId, dayPlanId, problemName, codeText, imageBytes);
+    }
+
+    @PostMapping(value = "/optimize", consumes = {"multipart/form-data"})
+    public CodeOptimizeResponseDto optimize(@RequestParam Long userId,
+                                            @RequestParam String problemName,
+                                            @RequestParam(required = false) String codeText,
+                                            @RequestPart(required = false) MultipartFile image) throws Exception {
+        byte[] imageBytes = image != null ? image.getBytes() : null;
+        return codeEvaluationService.optimize(userId, problemName, codeText, imageBytes);
     }
 }

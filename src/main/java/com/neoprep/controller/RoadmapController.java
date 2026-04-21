@@ -1,8 +1,11 @@
 package com.neoprep.controller;
 
 import com.neoprep.dto.RoadmapDayDto;
+import com.neoprep.dto.RoadmapRecalculationRequest;
+import com.neoprep.dto.RoadmapRecalculationResponse;
 import com.neoprep.dto.RoadmapResponseDto;
 import com.neoprep.service.RoadmapService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,5 +33,11 @@ public class RoadmapController {
     public ResponseEntity<Void> markComplete(@PathVariable Long roadmapId, @PathVariable Integer dayNumber) {
         roadmapService.markDayComplete(roadmapId, dayNumber);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{roadmapId}/recalculate")
+    public RoadmapRecalculationResponse recalculate(@PathVariable Long roadmapId,
+                                                    @Valid @RequestBody RoadmapRecalculationRequest request) {
+        return roadmapService.recalculateRoadmap(roadmapId, request);
     }
 }

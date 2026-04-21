@@ -10,15 +10,43 @@
   <main class="hud">
     <section class="panel">
       <h1>NeoPrep // Placement Copilot</h1>
-      <p>Generate your 35-day roadmap</p>
+      <p>Adaptive 35-day dashboard + Nexus Core</p>
       <textarea id="jd" placeholder="Paste Job Description"></textarea>
       <input id="email" placeholder="Email" />
       <input id="tier" placeholder="Target Tier" value="Tier-1" />
       <button id="generate">Generate Roadmap</button>
+      <button id="recalculate">Recalculate Remaining Days</button>
     </section>
 
     <section class="panel">
-      <h2>Day Plan</h2>
+      <h2>Iron Man Optimize</h2>
+      <input id="optUserId" placeholder="User ID" />
+      <input id="problem" placeholder="Problem Name" value="Two Sum" />
+      <textarea id="codeText" placeholder="Paste Java code"></textarea>
+      <button id="optimize">Optimize</button>
+      <pre id="optOutput">No optimization yet.</pre>
+    </section>
+
+    <section class="panel">
+      <h2>Daily Stand-up + Readiness</h2>
+      <input id="standupUserId" placeholder="User ID" />
+      <input id="company" placeholder="Company" value="Amazon" />
+      <button id="standup">Generate Stand-up</button>
+      <button id="readiness">Predict Placement Odds</button>
+      <pre id="standupOutput">No stand-up yet.</pre>
+    </section>
+
+    <section class="panel">
+      <h2>Pattern Vault</h2>
+      <input id="vaultCompany" placeholder="Company" value="Zoho" />
+      <input id="vaultTier" placeholder="Tier" value="Tier-1" />
+      <input id="vaultStyle" placeholder="Style hint" value="edge cases" />
+      <button id="generatePattern">Generate Practice</button>
+      <pre id="patternOutput">No generated practice yet.</pre>
+    </section>
+
+    <section class="panel">
+      <h2>Output</h2>
       <pre id="output">No roadmap yet.</pre>
     </section>
   </main>
