@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: neoprep
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/neoprep}
+    username: ${DB_USERNAME:neoprep}
+    password: ${DB_PASSWORD:neoprep}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+neoprep:
+  security:
+    api-key: ${NEOPREP_API_KEY:local-dev-key}
+    scoped-role: ${NEOPREP_SCOPED_ROLE:advanced-agent}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:5500}
+  standup:
+    cron: ${NEOPREP_STANDUP_CRON:0 0 7 * * *}
+  frontend:
+    feature-flags:
+      advanced-beta: ${NEOPREP_ADVANCED_BETA:true}

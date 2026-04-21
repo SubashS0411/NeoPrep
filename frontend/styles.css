@@ -1,0 +1,38 @@
+:root { color-scheme: dark; }
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #0d1f33, #05070e 60%);
+  color: #d8ecff;
+  font-family: Inter, system-ui, sans-serif;
+}
+.hud {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 20px;
+}
+.panel {
+  border: 1px solid #2b5f99;
+  border-radius: 12px;
+  padding: 16px;
+  background: rgba(4, 15, 28, 0.75);
+  box-shadow: 0 0 24px rgba(0, 140, 255, 0.2);
+}
+textarea, input, button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #1b4c86;
+  background: #091423;
+  color: #d8ecff;
+}
+button {
+  background: linear-gradient(90deg, #0a6fff, #c9a227);
+  border: none;
+  font-weight: 600;
+}
+pre {
+  white-space: pre-wrap;
+  font-size: 13px;
+}
