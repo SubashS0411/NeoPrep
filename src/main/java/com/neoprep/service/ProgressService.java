@@ -20,8 +20,8 @@ public class ProgressService {
     public ProgressResponseDto getProgress(Long userId) {
         long completedDays = dayPlanRepository.countByRoadmapUserIdAndCompletedTrue(userId);
         int streak = (int) Math.min(35, completedDays);
-        String latest = achievementRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
-                .findFirst().map(a -> a.getType()).orElse(null);
-        return new ProgressResponseDto(completedDays, streak, latest);
+        String latestAchievementType = achievementRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
+                .findFirst().map(achievement -> achievement.getType()).orElse(null);
+        return new ProgressResponseDto(completedDays, streak, latestAchievementType);
     }
 }

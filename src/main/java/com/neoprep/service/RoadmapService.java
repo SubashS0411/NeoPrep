@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 public class RoadmapService {
@@ -97,20 +98,20 @@ public class RoadmapService {
     }
 
     private RoadmapGeneration tryGenerateWithRetry(String jobDescription, String targetCompanyTier) {
-        Exception last = null;
+        Exception lastException = null;
         for (int attempt = 1; attempt <= 3; attempt++) {
             try {
                 String response = geminiClient.generateRoadmapJson(jobDescription, targetCompanyTier);
                 return roadmapJsonParser.parseAndValidate(response);
             } catch (Exception ex) {
-                last = ex;
+                lastException = ex;
             }
         }
-        return fallbackRoadmap(targetCompanyTier, last);
+        return fallbackRoadmap(targetCompanyTier, lastException);
     }
 
     private RoadmapGeneration fallbackRoadmap(String targetCompanyTier, Exception cause) {
-        List<RoadmapGenerationDay> days = java.util.stream.IntStream.rangeClosed(1, 35)
+        List<RoadmapGenerationDay> days = IntStream.rangeClosed(1, 35)
                 .mapToObj(day -> new RoadmapGenerationDay(
                         day,
                         day % 2 == 0 ? "SPRING_BOOT" : "DSA",
