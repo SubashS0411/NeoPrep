@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: neoprep
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/neoprep}
+    username: ${DB_USERNAME:neoprep}
+    password: ${DB_PASSWORD:neoprep}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+neoprep:
+  security:
+    api-key: ${NEOPREP_API_KEY:local-dev-key}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
